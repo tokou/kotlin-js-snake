@@ -4,8 +4,21 @@ import kotlinx.html.js.*
 import kotlinx.html.*
 
 fun main() {
+    val width = 20
+    val height = 20
+
     val grid = document.create.div {
-        h1 { +"Hello from div" }
+        table {
+            repeat(height) { i ->
+                tr {
+                    repeat(width) { j ->
+                        td {
+                            p { +"($i, $j)" }
+                        }
+                    }
+                }
+            }
+        }
     }
     document.body?.append(grid)
 }
