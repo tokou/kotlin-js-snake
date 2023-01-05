@@ -4,6 +4,10 @@
     height: 40px;
 }
 
+.snake {
+    background-color: darkseagreen;
+}
+
 table {
     border-collapse: collapse;
 }

@@ -7,13 +7,18 @@ fun main() {
     val width = 20
     val height = 20
 
+    val snake = Snake(
+        cells = listOf(Cell(2, 0), Cell(1, 0), Cell(0, 0)),
+        direction = Direction.Right
+    )
+
     val grid = document.create.div {
         table {
-            repeat(height) {
+            repeat(height) { j ->
                 tr {
-                    repeat(width) {
-                        td("cell") {
-                        }
+                    repeat(width) { i ->
+                        val snakeClasses = if (snake.cells.contains(Cell(i, j))) "snake" else ""
+                        td("cell $snakeClasses")
                     }
                 }
             }
