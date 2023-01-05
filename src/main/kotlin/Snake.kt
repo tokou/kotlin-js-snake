@@ -10,10 +10,18 @@ fun main() {
     console.log(snake)
 }
 
-data class Snake(val cells: List<Cell>, val direction: Direction)
+data class Snake(val cells: List<Cell>, val direction: Direction) {
+    fun move(): Snake {
+        val newHead = cells.first().move(direction)
+        val newTail = cells.dropLast(1)
+        return copy(cells = listOf(newHead) + newTail)
+    }
+}
 
-data class Cell(val x: Int, val y: Int)
+data class Cell(val x: Int, val y: Int) {
+    fun move(direction: Direction): Cell = Cell(x + direction.dx, y + direction.dy)
+}
 
-enum class Direction {
-    Up, Down, Left, Right
+enum class Direction(val dx: Int, val dy: Int) {
+    Up(0, -1), Down(0, 1), Left(-1, 0), Right(1, 0)
 }
