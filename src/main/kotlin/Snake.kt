@@ -1,13 +1,13 @@
-import kotlinx.browser.window
+import kotlinx.browser.document
+import kotlinx.html.dom.create
+import kotlinx.html.js.*
+import kotlinx.html.*
 
 fun main() {
-    console.log("Hello from  ${window.navigator.userAgent}")
-
-    val snake = Snake(
-        cells = listOf(Cell(2, 0), Cell(1, 0), Cell(0, 0)),
-        direction = Direction.Right
-    )
-    console.log(snake)
+    val grid = document.create.div {
+        h1 { +"Hello from div" }
+    }
+    document.body?.append(grid)
 }
 
 data class Snake(val cells: List<Cell>, val direction: Direction) {
