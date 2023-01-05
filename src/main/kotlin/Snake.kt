@@ -9,11 +9,10 @@ fun main() {
 
     val grid = document.create.div {
         table {
-            repeat(height) { i ->
+            repeat(height) {
                 tr {
-                    repeat(width) { j ->
-                        td {
-                            p { +"($i, $j)" }
+                    repeat(width) {
+                        td("cell") {
                         }
                     }
                 }
