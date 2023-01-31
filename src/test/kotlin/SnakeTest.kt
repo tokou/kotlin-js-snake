@@ -15,6 +15,7 @@ class TestClient {
             cells = listOf(Cell(2, 0), Cell(1, 0), Cell(0, 0)),
             direction = Direction.Right
         )
+
         assertEquals(
             actual = snake.move(),
             expected = Snake(

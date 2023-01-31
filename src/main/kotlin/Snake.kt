@@ -1,18 +1,30 @@
 import kotlinx.browser.document
+import kotlinx.browser.window
 import kotlinx.html.dom.create
 import kotlinx.html.js.*
 import kotlinx.html.*
 
-fun main() {
-    val width = 20
-    val height = 20
+const val width = 20
+const val height = 20
 
-    val snake = Snake(
+fun main() {
+
+    var snake = Snake(
         cells = listOf(Cell(2, 0), Cell(1, 0), Cell(0, 0)),
         direction = Direction.Right
     )
 
+    val loop = {
+        snake = snake.move()
+        draw(snake)
+    }
+
+    window.setInterval(loop, 400)
+}
+
+fun draw(snake: Snake) {
     val grid = document.create.div {
+        id = "grid"
         table {
             repeat(height) { j ->
                 tr {
@@ -24,6 +36,7 @@ fun main() {
             }
         }
     }
+    document.getElementById("grid")?.remove()
     document.body?.append(grid)
 }
 
