@@ -7,17 +7,16 @@ import kotlinx.html.*
 import org.w3c.dom.events.Event
 import org.w3c.dom.events.KeyboardEvent
 
-const val loopTimeout = 200
-const val width = 20
-const val height = 20
-val snake = Snake(
-    cells = listOf(Cell(4, 0), Cell(3, 0), Cell(2, 0), Cell(1, 0), Cell(0, 0)),
-    direction = Direction.Right
-)
-
 fun main() {
 
-    var game = Game(width, height, snake)
+    var game = Game(
+        width = 20,
+        height = 20,
+        snake = Snake(
+            cells = listOf(Cell(4, 0), Cell(3, 0), Cell(2, 0), Cell(1, 0), Cell(0, 0)),
+            direction = Direction.Right
+        )
+    )
 
     var loopHandle = 0
 
@@ -36,7 +35,7 @@ fun main() {
     }
 
     document.addEventListener("keydown", onTurn)
-    loopHandle = window.setInterval(loop, loopTimeout)
+    loopHandle = window.setInterval(loop, 200)
 }
 
 fun draw(game: Game) {
