@@ -1,5 +1,5 @@
 plugins {
-    kotlin("multiplatform") version "1.8.0"
+    kotlin("multiplatform") version "1.8.10"
 }
 
 group = "fr.belkahia"
@@ -16,9 +16,25 @@ kotlin {
         browser()
     }
 
-    macosX64 { binaries.executable { entryPoint("main") } }
-    macosArm64 { binaries.executable { entryPoint("main") } }
-    linuxX64 { binaries.executable { entryPoint("main") } }
+    val ncursesMacosVersion = "6.4"
+    val macosHomebrewCellar = "/opt/homebrew/Cellar"
+    val ncursesMacosPath = "$macosHomebrewCellar/ncurses/$ncursesMacosVersion"
+    val macosNcursesIncludes = arrayOf(
+        "$ncursesMacosPath/include/",
+        "$ncursesMacosPath/include/ncursesw"
+    )
+    macosX64 {
+        compilations.getByName("main") { cinterops { val ncurses by creating { includeDirs(*macosNcursesIncludes) } } }
+        binaries.executable { entryPoint("main") }
+    }
+    macosArm64 {
+        compilations.getByName("main") { cinterops { val ncurses by creating { includeDirs(*macosNcursesIncludes) } } }
+        binaries.executable { entryPoint("main") }
+    }
+    linuxX64 {
+        compilations.getByName("main") { cinterops { val ncurses by creating } }
+        binaries.executable { entryPoint("main") }
+    }
 
     sourceSets {
         val commonMain by getting {}
