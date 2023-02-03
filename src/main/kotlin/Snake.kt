@@ -27,7 +27,7 @@ fun main() {
         if (key.startsWith("Arrow")) game = game.update(Direction.valueOf(key.drop(5)))
     })
 
-    window.setInterval(loop, 400)
+    window.setInterval(loop, 200)
 }
 
 fun draw(game: Game) {
@@ -51,11 +51,13 @@ fun draw(game: Game) {
     document.body?.append(grid)
 }
 
-data class Game(val width: Int, val height: Int, val snake: Snake) {
+data class Game(val width: Int, val height: Int, val snake: Snake, val canTurn: Boolean = true) {
 
-    fun update(direction: Direction) = copy(snake = snake.turn(direction))
+    fun update(direction: Direction) =
+        if (!canTurn) this
+        else copy(snake = snake.turn(direction), canTurn = false)
 
-    fun tick() = copy(snake = snake.move())
+    fun tick() = copy(snake = snake.move(), canTurn = true)
 }
 
 data class Snake(val cells: List<Cell>, val direction: Direction) {
