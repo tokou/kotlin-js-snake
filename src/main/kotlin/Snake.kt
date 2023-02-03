@@ -52,6 +52,11 @@ data class Snake(val cells: List<Cell>, val direction: Direction) {
         val newTail = cells.dropLast(1)
         return copy(cells = listOf(newHead) + newTail)
     }
+
+    fun turn(newDirection: Direction): Snake {
+        if (newDirection.isOpposite(direction)) return this
+        return copy(direction = newDirection)
+    }
 }
 
 data class Cell(val x: Int, val y: Int) {
@@ -59,5 +64,7 @@ data class Cell(val x: Int, val y: Int) {
 }
 
 enum class Direction(val dx: Int, val dy: Int) {
-    Up(0, -1), Down(0, 1), Left(-1, 0), Right(1, 0)
+    Up(0, -1), Down(0, 1), Left(-1, 0), Right(1, 0);
+
+    fun isOpposite(that: Direction) = dx + that.dx == 0 && dy + that.dy == 0
 }

@@ -1,3 +1,4 @@
+import Direction.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -9,18 +10,36 @@ class TestClient {
         assertTrue { window.navigator.userAgent.contains("Mozilla") }
     }
 
+    private val snake = Snake(
+        cells = listOf(Cell(2, 0), Cell(1, 0), Cell(0, 0)),
+        direction = Right
+    )
+
     @Test
     fun testMove() {
-        val snake = Snake(
-            cells = listOf(Cell(2, 0), Cell(1, 0), Cell(0, 0)),
-            direction = Direction.Right
-        )
-
         assertEquals(
             actual = snake.move(),
             expected = Snake(
                 cells = listOf(Cell(3, 0), Cell(2, 0), Cell(1, 0)),
-                direction = Direction.Right
+                direction = Right
+            )
+        )
+    }
+
+    @Test
+    fun testDirection() {
+        assertEquals(
+            actual = snake.turn(Down).move(),
+            expected = Snake(
+                cells = listOf(Cell(2, 1), Cell(2, 0), Cell(1, 0)),
+                direction = Down
+            )
+        )
+        assertEquals(
+            actual = snake.turn(Left).move(),
+            expected = Snake(
+                cells = listOf(Cell(3, 0), Cell(2, 0), Cell(1, 0)),
+                direction = Right
             )
         )
     }
