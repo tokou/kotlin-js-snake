@@ -1,14 +1,8 @@
 import Direction.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertTrue
-import kotlinx.browser.window
 
-class TestClient {
-    @Test
-    fun testUserAgent() {
-        assertTrue { window.navigator.userAgent.contains("Mozilla") }
-    }
+class SnakeTest {
 
     private val snake = Snake(
         cells = listOf(Cell(2, 0), Cell(1, 0), Cell(0, 0)),
