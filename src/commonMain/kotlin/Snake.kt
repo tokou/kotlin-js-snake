@@ -7,12 +7,11 @@ data class Game(
     val apples: Apples = Apples(width, height),
     val canTurn: Boolean = true
 ) {
+    val score = snake.cells.size
 
     @OptIn(ExperimentalStdlibApi::class)
-    val isOver: Boolean =
-        snake.tail.contains(snake.head) || snake.cells.any {
-            it.x !in 0..<width || it.y !in 0..<height
-        }
+    val isOver = snake.tail.contains(snake.head) ||
+        snake.cells.any { it.x !in 0..<width || it.y !in 0..<height }
 
     fun update(direction: Direction) =
         if (!canTurn) this

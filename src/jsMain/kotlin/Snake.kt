@@ -57,5 +57,5 @@ fun draw(game: Game) {
     }
     document.getElementById("grid")?.remove()
     document.body?.append(grid)
-    if (game.isOver) window.alert("Game Over\nYour score is  ${game.snake.cells.size}")
+    if (game.isOver) window.alert("Game Over\nYour score is  ${game.score}")
 }
