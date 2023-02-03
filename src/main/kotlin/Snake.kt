@@ -6,6 +6,7 @@ import kotlinx.html.*
 import org.w3c.dom.events.Event
 import org.w3c.dom.events.KeyboardEvent
 
+const val loopTimeout = 200
 const val width = 20
 const val height = 20
 val snake = Snake(
@@ -17,17 +18,20 @@ fun main() {
 
     var game = Game(width, height, snake)
 
+    var loopHandle = 0
+
+    val onTurn: (Event) -> Unit = { event ->
+        val key = (event as KeyboardEvent).key
+        if (key.startsWith("Arrow")) game = game.update(Direction.valueOf(key.drop(5)))
+    }
+
     val loop = {
         game = game.tick()
         draw(game)
     }
 
-    document.addEventListener("keydown", { event ->
-        val key = (event as KeyboardEvent).key
-        if (key.startsWith("Arrow")) game = game.update(Direction.valueOf(key.drop(5)))
-    })
-
-    window.setInterval(loop, 200)
+    document.addEventListener("keydown", onTurn)
+    loopHandle = window.setInterval(loop, loopTimeout)
 }
 
 fun draw(game: Game) {
