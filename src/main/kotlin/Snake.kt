@@ -8,38 +8,39 @@ import org.w3c.dom.events.KeyboardEvent
 
 const val width = 20
 const val height = 20
+val snake = Snake(
+    cells = listOf(Cell(4, 0), Cell(3, 0), Cell(2, 0), Cell(1, 0), Cell(0, 0)),
+    direction = Direction.Right
+)
 
 fun main() {
 
-    var snake = Snake(
-        cells = listOf(Cell(2, 0), Cell(1, 0), Cell(0, 0)),
-        direction = Direction.Right
-    )
+    var game = Game(width, height, snake)
 
     val loop = {
-        snake = snake.move()
-        draw(snake)
+        game = game.tick()
+        draw(game)
     }
 
     document.addEventListener("keydown", { event ->
         val key = (event as KeyboardEvent).key
-        if (key.startsWith("Arrow")) snake = snake.turn(Direction.valueOf(key.drop(5)))
+        if (key.startsWith("Arrow")) game = game.update(Direction.valueOf(key.drop(5)))
     })
 
     window.setInterval(loop, 400)
 }
 
-fun draw(snake: Snake) {
+fun draw(game: Game) {
     val grid = document.create.div {
         id = "grid"
         table {
-            repeat(height) { j ->
+            repeat(game.height) { j ->
                 tr {
-                    repeat(width) { i ->
+                    repeat(game.width) { i ->
                         val cell = Cell(i, j)
-                        val direction = snake.direction.toString().lowercase()
-                        val snakeClasses = if (snake.cells.contains(cell)) "snake" else ""
-                        val headClasses = if (snake.head == cell) "head $direction" else ""
+                        val direction = game.snake.direction.toString().lowercase()
+                        val snakeClasses = if (game.snake.cells.contains(cell)) "snake" else ""
+                        val headClasses = if (game.snake.head == cell) "head $direction" else ""
                         td("cell $snakeClasses $headClasses")
                     }
                 }
@@ -48,6 +49,13 @@ fun draw(snake: Snake) {
     }
     document.getElementById("grid")?.remove()
     document.body?.append(grid)
+}
+
+data class Game(val width: Int, val height: Int, val snake: Snake) {
+
+    fun update(direction: Direction) = copy(snake = snake.turn(direction))
+
+    fun tick() = copy(snake = snake.move())
 }
 
 data class Snake(val cells: List<Cell>, val direction: Direction) {
