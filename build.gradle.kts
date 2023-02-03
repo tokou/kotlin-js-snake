@@ -73,12 +73,31 @@ kotlin {
 
         val androidMain by getting {
             dependencies {
-                val composeBom = platform("androidx.compose:compose-bom:2023.01.00")
-                implementation(composeBom)
+                implementation(platform("androidx.compose:compose-bom:2023.01.00"))
                 implementation("androidx.compose.material3:material3")
                 implementation("com.google.android.material:material:1.8.0")
                 implementation("androidx.compose.ui:ui-tooling-preview")
                 implementation("androidx.activity:activity-compose:1.6.1")
+            }
+        }
+
+        val androidUnitTest by getting {
+            dependencies {
+                implementation(kotlin("test"))
+                implementation("junit:junit:4.13.2")
+                implementation("androidx.test:core:1.5.0")
+                implementation("androidx.test:core-ktx:1.5.0")
+            }
+        }
+
+        val androidInstrumentedTest by getting {
+            dependencies {
+                implementation(kotlin("test"))
+                implementation("androidx.test:runner:1.5.2")
+                implementation("androidx.test:rules:1.5.0")
+                implementation("androidx.test.espresso:espresso-core:3.5.1")
+                implementation("androidx.test.uiautomator:uiautomator:2.2.0")
+                implementation("androidx.compose.ui:ui-test-junit4:1.4.0-alpha05")
             }
         }
     }
@@ -95,6 +114,7 @@ android {
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         getByName("release") {
