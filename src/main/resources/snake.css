@@ -11,3 +11,26 @@
 table {
     border-collapse: collapse;
 }
+
+.head {
+    background-image: url("https://cdn4.iconfinder.com/data/icons/nuuline-animals/150/animal_face_head_cartoon-23-512.png");
+    background-repeat: no-repeat;
+    background-size: 135% 135%;
+    background-position: center;
+}
+
+.head.right {
+    transform: rotate(270deg) translate(0px, -1px);
+}
+
+.head.up {
+    transform: rotate(180deg) translate(0px, -1px);
+}
+
+.head.down {
+    transform: translate(0px, -1px);
+}
+
+.head.left {
+    transform: translate(90px, -1px);
+}

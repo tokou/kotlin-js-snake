@@ -29,8 +29,11 @@ fun draw(snake: Snake) {
             repeat(height) { j ->
                 tr {
                     repeat(width) { i ->
-                        val snakeClasses = if (snake.cells.contains(Cell(i, j))) "snake" else ""
-                        td("cell $snakeClasses")
+                        val cell = Cell(i, j)
+                        val direction = snake.direction.toString().lowercase()
+                        val snakeClasses = if (snake.cells.contains(cell)) "snake" else ""
+                        val headClasses = if (snake.head == cell) "head $direction" else ""
+                        td("cell $snakeClasses $headClasses")
                     }
                 }
             }
@@ -41,6 +44,9 @@ fun draw(snake: Snake) {
 }
 
 data class Snake(val cells: List<Cell>, val direction: Direction) {
+    val head = cells.first()
+    val tail = cells.drop(1)
+
     fun move(): Snake {
         val newHead = cells.first().move(direction)
         val newTail = cells.dropLast(1)
