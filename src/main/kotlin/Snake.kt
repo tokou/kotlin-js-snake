@@ -3,6 +3,8 @@ import kotlinx.browser.window
 import kotlinx.html.dom.create
 import kotlinx.html.js.*
 import kotlinx.html.*
+import org.w3c.dom.events.Event
+import org.w3c.dom.events.KeyboardEvent
 
 const val width = 20
 const val height = 20
@@ -18,6 +20,11 @@ fun main() {
         snake = snake.move()
         draw(snake)
     }
+
+    document.addEventListener("keydown", { event ->
+        val key = (event as KeyboardEvent).key
+        if (key.startsWith("Arrow")) snake = snake.turn(Direction.valueOf(key.drop(5)))
+    })
 
     window.setInterval(loop, 400)
 }

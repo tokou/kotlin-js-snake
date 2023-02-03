@@ -24,13 +24,12 @@ table {
 }
 
 .head.up {
-    transform: rotate(180deg) translate(0px, -1px);
+    transform: rotate(180deg);
 }
 
 .head.down {
-    transform: translate(0px, -1px);
 }
 
 .head.left {
-    transform: translate(90px, -1px);
+    transform: rotate(90deg) translate(-1px, 0px);
 }
