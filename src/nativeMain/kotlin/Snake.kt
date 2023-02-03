@@ -1,23 +1,56 @@
-import platform.posix.getpid
+import Direction.*
+import kotlinx.cinterop.CPointer
+import kotlinx.cinterop.memScoped
 import ncurses.*
 
-fun main() {
-    println("Hello from ${getpid()}")
-
-    val width = 20
-    val height = 10
-
+fun main(): Unit = memScoped {
     initscr()
+    defer { endwin() }
     noecho()
     curs_set(0)
+    halfdelay(2)
 
-    val window = newwin(height, width, 0, 0)
-    box(window, 0, 0)
-    mvwprintw(window, 3, 2, "Hello from ${getpid()}")
+    var game = Game(
+        width = 20,
+        height = 10,
+        snake = Snake(
+            cells = listOf(Cell(4, 0), Cell(3, 0), Cell(2, 0), Cell(1, 0), Cell(0, 0)),
+            direction = Right
+        )
+    )
 
-    wrefresh(window)
-    wgetch(window)
+    val window = newwin(game.height + 2, game.width + 2, 0, 0)!!
+    defer { delwin(window) }
 
-    delwin(window)
-    endwin()
+    var input = 0
+    while (input.toChar() != 'q') {
+        window.draw(game)
+
+        input = wgetch(window)
+        val direction = when (input.toChar()) {
+            'i' -> Up
+            'j' -> Left
+            'k' -> Down
+            'l' -> Right
+            else -> null
+        }
+
+        if (!game.isOver) game = game.tick()
+        direction?.let { game = game.update(it) }
+    }
+}
+
+private fun CPointer<WINDOW>.draw(game: Game) {
+    wclear(this)
+    box(this, 0u, 0u)
+
+    game.apples.cells.forEach { mvwprintw(this, it.y + 1, it.x + 1, ".") }
+    game.snake.tail.forEach { mvwprintw(this, it.y + 1, it.x + 1, "o") }
+    game.snake.head.let { mvwprintw(this, it.y + 1, it.x + 1, "Q") }
+    if (game.isOver) {
+        mvwprintw(this, 0, 6, "Game Over")
+        mvwprintw(this, 1, 3, "Your score is ${game.score}")
+    }
+
+    wrefresh(this)
 }
