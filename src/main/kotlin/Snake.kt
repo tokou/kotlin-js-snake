@@ -1,3 +1,4 @@
+import kotlin.random.Random
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.html.dom.create
@@ -49,7 +50,8 @@ fun draw(game: Game) {
                         val direction = game.snake.direction.toString().lowercase()
                         val snakeClasses = if (game.snake.cells.contains(cell)) "snake" else ""
                         val headClasses = if (game.snake.head == cell) "head $direction" else ""
-                        td("cell $snakeClasses $headClasses")
+                        val appleClasses = if (game.apples.cells.contains(cell)) "apple" else ""
+                        td("cell $snakeClasses $headClasses $appleClasses")
                     }
                 }
             }
@@ -60,7 +62,13 @@ fun draw(game: Game) {
     if (game.isOver) window.alert("Game Over\nYour score is  ${game.snake.cells.size}")
 }
 
-data class Game(val width: Int, val height: Int, val snake: Snake, val canTurn: Boolean = true) {
+data class Game(
+    val width: Int,
+    val height: Int,
+    val snake: Snake,
+    val apples: Apples = Apples(width, height),
+    val canTurn: Boolean = true
+) {
 
     @OptIn(ExperimentalStdlibApi::class)
     val isOver: Boolean =
@@ -72,7 +80,23 @@ data class Game(val width: Int, val height: Int, val snake: Snake, val canTurn: 
         if (!canTurn) this
         else copy(snake = snake.turn(direction), canTurn = false)
 
-    fun tick() = copy(snake = snake.move(), canTurn = true)
+    fun tick() = copy(
+        snake = snake.move(),
+        apples = apples.grow(),
+        canTurn = true
+    )
+}
+
+data class Apples(
+    val width: Int,
+    val height: Int,
+    val cells: Set<Cell> = emptySet(),
+    val growthFactor: Int = 3,
+    val random: Random = Random
+) {
+    fun grow(): Apples =
+        if (random.nextInt(10) >= growthFactor) this
+        else copy(cells = cells + Cell(random.nextInt(width), random.nextInt(height)))
 }
 
 data class Snake(val cells: List<Cell>, val direction: Direction) {
