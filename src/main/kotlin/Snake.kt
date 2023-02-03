@@ -79,11 +79,10 @@ data class Game(
         if (!canTurn) this
         else copy(snake = snake.turn(direction), canTurn = false)
 
-    fun tick() = copy(
-        snake = snake.move(),
-        apples = apples.grow(),
-        canTurn = true
-    )
+    fun tick(): Game {
+        val (newSnake, newApples) = snake.move().eat(apples.grow())
+        return copy(snake = newSnake, apples = newApples, canTurn = true)
+    }
 }
 
 data class Apples(
@@ -98,20 +97,27 @@ data class Apples(
         else copy(cells = cells + Cell(random.nextInt(width), random.nextInt(height)))
 }
 
-data class Snake(val cells: List<Cell>, val direction: Direction) {
+data class Snake(
+    val cells: List<Cell>,
+    val direction: Direction,
+    val eatenApples: Int = 0
+) {
     val head = cells.first()
     val tail = cells.drop(1)
 
     fun move(): Snake {
         val newHead = cells.first().move(direction)
-        val newTail = cells.dropLast(1)
-        return copy(cells = listOf(newHead) + newTail)
+        val newTail = if (eatenApples == 0) cells.dropLast(1) else cells
+        return copy(cells = listOf(newHead) + newTail, eatenApples = maxOf(0, eatenApples - 1))
     }
 
-    fun turn(newDirection: Direction): Snake {
-        if (newDirection.isOpposite(direction)) return this
-        return copy(direction = newDirection)
-    }
+    fun turn(newDirection: Direction): Snake =
+        if (newDirection.isOpposite(direction)) this
+        else copy(direction = newDirection)
+
+    fun eat(apples: Apples): Pair<Snake, Apples> =
+        if (!apples.cells.contains(head)) this to apples
+        else copy(eatenApples = eatenApples + 1) to apples.copy(cells = apples.cells - head)
 }
 
 data class Cell(val x: Int, val y: Int) {
