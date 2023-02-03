@@ -28,6 +28,10 @@ fun main() {
     val loop = {
         game = game.tick()
         draw(game)
+        if (game.isOver) {
+            window.clearInterval(loopHandle)
+            document.removeEventListener("keydown", onTurn)
+        }
     }
 
     document.addEventListener("keydown", onTurn)
@@ -53,9 +57,16 @@ fun draw(game: Game) {
     }
     document.getElementById("grid")?.remove()
     document.body?.append(grid)
+    if (game.isOver) window.alert("Game Over\nYour score is  ${game.snake.cells.size}")
 }
 
 data class Game(val width: Int, val height: Int, val snake: Snake, val canTurn: Boolean = true) {
+
+    @OptIn(ExperimentalStdlibApi::class)
+    val isOver: Boolean =
+        snake.tail.contains(snake.head) || snake.cells.any {
+            it.x !in 0..<width || it.y !in 0..<height
+        }
 
     fun update(direction: Direction) =
         if (!canTurn) this
